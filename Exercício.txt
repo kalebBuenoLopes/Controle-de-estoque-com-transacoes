@@ -1,0 +1,737 @@
+EXERCÍCIO 03 – SISTEMA DE CONTROLE DE ESTOQUE
+
+====================================================
+OBJETIVO DO EXERCÍCIO
+=====================
+
+Até agora você aprendeu:
+
+* CRUD
+* Classes
+* Métodos
+* Listas
+* SQLite
+* Relacionamentos
+* JOIN
+* Repository
+* Services
+* Relatórios básicos
+
+Mas existe um problema.
+
+Todos os sistemas criados até agora respondem:
+
+"O que existe hoje?"
+
+Porém não respondem:
+
+"O que aconteceu para chegar até aqui?"
+
+Exemplo:
+
+Produto: Mouse Gamer
+
+Quantidade Atual: 47
+
+Pergunta:
+
+Como chegou em 47?
+
+Quem alterou?
+
+Quando alterou?
+
+Foi venda?
+
+Foi compra?
+
+Foi ajuste?
+
+Foi erro?
+
+Atualmente você não consegue responder essas perguntas.
+
+O objetivo deste exercício é resolver exatamente esse problema.
+
+====================================================
+CONHECIMENTO QUE VOCÊ JÁ POSSUI
+===============================
+
+Você já sabe:
+
+✓ Criar classes
+
+✓ Criar métodos
+
+✓ Trabalhar com List<T>
+
+✓ Criar tabelas SQLite
+
+✓ Utilizar Foreign Keys
+
+✓ Utilizar Repository
+
+✓ Utilizar Service
+
+✓ Fazer JOIN
+
+✓ Utilizar COUNT
+
+✓ Utilizar SUM
+
+✓ Utilizar AVG
+
+✓ Utilizar GROUP BY
+
+✓ Criar relatórios
+
+====================================================
+CONTEÚDO NOVO
+=============
+
+Tema:
+Movimentação de Estoque
+
+O que preciso entender:
+
+O estoque atual não conta a história do produto.
+
+Aplicação:
+
+Criar histórico completo das alterações.
+
+---
+
+Tema:
+Auditoria
+
+O que preciso entender:
+
+Nem toda alteração importante acontece apenas no estoque.
+
+Aplicação:
+
+Criar histórico das ações realizadas.
+
+---
+
+Tema:
+Transações
+
+O que preciso entender:
+
+Uma operação pode alterar várias tabelas.
+
+Aplicação:
+
+Garantir que tudo seja salvo junto.
+
+---
+
+Tema:
+Enum
+
+O que preciso entender:
+
+Evitar textos repetidos no código.
+
+Aplicação:
+
+Representar tipos de movimentação.
+
+====================================================
+PROBLEMA DO SISTEMA
+===================
+
+Imagine uma empresa.
+
+Ela possui:
+
+Mouse
+Teclado
+Monitor
+Headset
+
+Ela sabe apenas:
+
+Nome
+Preço
+Quantidade Atual
+
+Mas não consegue responder:
+
+Quem alterou o estoque?
+
+Quando alterou?
+
+Qual foi a alteração?
+
+Qual era o valor anterior?
+
+Qual foi a última movimentação?
+
+Seu sistema deverá resolver esse problema.
+
+====================================================
+MENU ESPERADO
+=============
+
+1 - Cadastrar Produto
+
+2 - Listar Produtos
+
+3 - Entrada de Estoque
+
+4 - Saída de Estoque
+
+5 - Ajuste Manual
+
+6 - Histórico de Movimentações
+
+7 - Relatórios
+
+8 - Auditoria
+
+9 - Sair
+
+====================================================
+MODELAGEM
+=========
+
+O sistema utilizará:
+
+PRODUTOS
+
+MOVIMENTACOES
+
+AUDITORIA
+
+====================================================
+TABELA PRODUTOS
+===============
+
+PROBLEMA QUE ELA RESOLVE
+
+Precisamos armazenar os produtos.
+
+Sem ela não existe estoque.
+
+---
+
+IDEIA DA TABELA
+
+Representar o estado atual do produto.
+
+---
+
+EXEMPLO
+
+Mouse Gamer
+
+Preço:
+120,00
+
+Quantidade:
+15
+
+---
+
+ESTRUTURA
+
+ID
+
+NOME
+
+PRECO
+
+QUANTIDADE_ATUAL
+
+---
+
+RESPONSABILIDADE
+
+Mostrar apenas o estado atual.
+
+Não guardar histórico.
+
+====================================================
+TABELA MOVIMENTACOES
+====================
+
+PROBLEMA QUE ELA RESOLVE
+
+A tabela PRODUTOS mostra:
+
+Quantidade Atual = 47
+
+Mas não explica:
+
+Como chegou em 47?
+
+---
+
+IDEIA DA TABELA
+
+Guardar toda entrada e saída do estoque.
+
+---
+
+EXEMPLO
+
+Entrada de 10 unidades
+
+Depois:
+
+Saída de 3 unidades
+
+Depois:
+
+Entrada de 5 unidades
+
+Agora sabemos toda a história do estoque.
+
+---
+
+ESTRUTURA
+
+ID
+
+ID_PRODUTO
+
+TIPO_MOVIMENTACAO
+
+QUANTIDADE
+
+OBSERVACAO
+
+DATA_MOVIMENTACAO
+
+---
+
+RESPONSABILIDADE
+
+Guardar movimentações.
+
+Nada mais.
+
+====================================================
+TABELA AUDITORIA
+================
+
+PROBLEMA QUE ELA RESOLVE
+
+Nem toda informação importante é movimentação.
+
+Exemplo:
+
+Produto cadastrado.
+
+Produto removido.
+
+Estoque ajustado.
+
+Erro ocorrido.
+
+---
+
+IDEIA DA TABELA
+
+Registrar eventos importantes do sistema.
+
+---
+
+EXEMPLO
+
+OPERACAO:
+CADASTRO_PRODUTO
+
+DESCRICAO:
+Produto Mouse Gamer cadastrado.
+
+---
+
+ESTRUTURA
+
+ID
+
+OPERACAO
+
+DESCRICAO
+
+DATA_EVENTO
+
+---
+
+RESPONSABILIDADE
+
+Registrar ações importantes.
+
+====================================================
+COMANDOS MENTAIS
+================
+
+Sempre que criar uma tabela, pergunte:
+
+Qual problema ela resolve?
+
+---
+
+Sempre que criar um campo, pergunte:
+
+Qual informação ele representa?
+
+---
+
+Sempre que criar um método, pergunte:
+
+Qual responsabilidade ele possui?
+
+---
+
+Sempre que criar uma funcionalidade, pergunte:
+
+O usuário realmente precisa disso?
+
+====================================================
+ESTRUTURA DAS CLASSES
+=====================
+
+Produto
+
+Movimentacao
+
+Auditoria
+
+TipoMovimentacao (Enum)
+
+====================================================
+ENUM
+====
+
+PROBLEMA
+
+Evitar usar textos repetidos.
+
+---
+
+ERRADO
+
+"ENTRADA"
+
+"SAIDA"
+
+"AJUSTE"
+
+Espalhados pelo sistema.
+
+---
+
+CORRETO
+
+Enum centralizando tudo.
+
+====================================================
+FUNCIONALIDADE
+==============
+
+# CADASTRAR PRODUTO
+
+Fluxo
+
+Informar nome.
+
+Informar preço.
+
+Informar quantidade inicial.
+
+Salvar produto.
+
+Criar auditoria.
+
+====================================================
+FUNCIONALIDADE
+==============
+
+# ENTRADA DE ESTOQUE
+
+Problema
+
+Chegaram novos produtos.
+
+---
+
+Fluxo
+
+Selecionar produto.
+
+Informar quantidade.
+
+Atualizar estoque.
+
+Criar movimentação.
+
+Criar auditoria.
+
+====================================================
+FUNCIONALIDADE
+==============
+
+# SAÍDA DE ESTOQUE
+
+Problema
+
+Produtos saíram do estoque.
+
+---
+
+Fluxo
+
+Selecionar produto.
+
+Informar quantidade.
+
+Validar estoque.
+
+Atualizar estoque.
+
+Criar movimentação.
+
+Criar auditoria.
+
+====================================================
+REGRA MAIS IMPORTANTE
+=====================
+
+Nunca permitir:
+
+Quantidade negativa.
+
+---
+
+Exemplo
+
+Quantidade Atual:
+
+5
+
+Saída:
+
+8
+
+Resultado:
+
+Operação negada.
+
+====================================================
+FUNCIONALIDADE
+==============
+
+# AJUSTE MANUAL
+
+Problema
+
+Sistema:
+
+50 unidades
+
+Contagem física:
+
+47 unidades
+
+---
+
+Fluxo
+
+Selecionar produto.
+
+Informar quantidade correta.
+
+Atualizar estoque.
+
+Criar movimentação.
+
+Criar auditoria.
+
+====================================================
+POR QUE EXISTEM TRANSAÇÕES
+==========================
+
+Imagine:
+
+Atualizar estoque
+
+↓
+
+Criar movimentação
+
+↓
+
+Criar auditoria
+
+---
+
+Agora imagine:
+
+Atualizar estoque = OK
+
+Criar movimentação = OK
+
+Criar auditoria = ERRO
+
+---
+
+Resultado:
+
+Banco inconsistente.
+
+---
+
+Objetivo
+
+Aprender:
+
+BeginTransaction()
+
+Commit()
+
+Rollback()
+
+====================================================
+RELATÓRIOS
+==========
+
+Relatório 1
+
+Produto mais movimentado.
+
+---
+
+Relatório 2
+
+Produtos com maior estoque.
+
+---
+
+Relatório 3
+
+Quantidade total de entradas.
+
+---
+
+Relatório 4
+
+Quantidade total de saídas.
+
+---
+
+Relatório 5
+
+Valor total do estoque.
+
+---
+
+Relatório 6
+
+Últimas movimentações.
+
+====================================================
+SEQUÊNCIA DE ESTUDO
+===================
+
+ETAPA 1
+
+Criar Models.
+
+---
+
+ETAPA 2
+
+Criar Banco.cs.
+
+---
+
+ETAPA 3
+
+Criar tabelas.
+
+---
+
+ETAPA 4
+
+CRUD Produto.
+
+---
+
+ETAPA 5
+
+Entrada de Estoque.
+
+---
+
+ETAPA 6
+
+Saída de Estoque.
+
+---
+
+ETAPA 7
+
+Ajuste Manual.
+
+---
+
+ETAPA 8
+
+Histórico.
+
+---
+
+ETAPA 9
+
+Relatórios.
+
+---
+
+ETAPA 10
+
+Transações.
+
+====================================================
+COMO SABER QUE APRENDEU
+=======================
+
+Você consegue responder:
+
+Por que existe a tabela PRODUTOS?
+
+Por que existe a tabela MOVIMENTACOES?
+
+Por que existe a tabela AUDITORIA?
+
+Qual a diferença entre MOVIMENTACOES e AUDITORIA?
+
+Por que usar Enum?
+
+Por que usar Transações?
+
+Qual problema o Rollback resolve?
+
+Se conseguir responder essas perguntas sem consultar material, o exercício atingiu seu objetivo.
+
+====================================================
+PRÓXIMO ASSUNTO DEPOIS DESTE EXERCÍCIO
+======================================
+
+Sistema de Chamados (Help Desk)
+
+OU
+
+ASP.NET Core MVC
+
+Dependendo do domínio dos conceitos de:
+
+* Transações
+* Auditoria
+* Enum
+* Histórico
+* Tratamento de Erros
