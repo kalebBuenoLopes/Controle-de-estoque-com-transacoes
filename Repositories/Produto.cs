@@ -15,7 +15,7 @@ namespace ControleEstoque.Repository
 
             comando.CommandText = @"
             
-                INSERT INT PRODUTOS (NOME,PRECO,QUANTIDADE)
+                INSERT INTO PRODUTOS (NOME,PRECO,QUANTIDADE)
                 VALUES (@NOME,@PRECO,@QUANTIDADE);
 
             ";
@@ -54,6 +54,57 @@ namespace ControleEstoque.Repository
             }
 
             return produtos;
+        }
+
+        public static Produto? SelecionarProduto(long id)
+        {
+            using var conexao = Banco.AbrirConexao();
+            var comando = conexao.CreateCommand();
+            comando.Parameters.AddWithValue("@ID", id);
+
+            comando.CommandText = @"
+            
+                SELECT
+                    ID,
+                    NOME,
+                    PRECO,
+                    QUANTIDADE
+                FROM PRODUTOS
+                WHERE ID = @ID
+            
+            ";
+
+            var leitor = comando.ExecuteReader();
+            Produto produto = new Produto();
+            if (leitor.Read())
+            {
+             produto.Id = leitor.GetInt64(0);
+             produto.Nome = leitor.GetString(1);
+             produto.Preco = leitor.GetDecimal(2);
+             produto.Quantidade = leitor.GetInt32(3);
+
+             return produto;   
+            }
+
+            return null;
+        }
+
+        public static void EntradaEstoque(long id, int quantidade)
+        {
+            using var conexao = Banco.AbrirConexao();
+            var comando = conexao.CreateCommand();
+            comando.Parameters.AddWithValue("@ID", id);
+            comando.Parameters.AddWithValue("@QUANTIDADE", quantidade);
+
+            comando.CommandText = @"
+            
+                UPDATE TABLE PRODUTOS
+                SET QUANTIDADE = QUANTIDADE + @QUANTIDADE
+                WHERE ID = @ID;
+            
+            ";
+
+            comando.ExecuteNonQuery();
         }
     }
 }

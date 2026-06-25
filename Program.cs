@@ -22,7 +22,10 @@ namespace ControleEstoque
                     break;
                     case 2:
                         ProdutoServices.ListarProdutos();
-                    break;   
+                    break;
+                    case 3:
+                        MovimentacaoServices.EntradaEstoque();
+                    break;  
                     case 9:
                         Console.Clear();
                     break;

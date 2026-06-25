@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/home/kak/Documentos/Projetos/Controle-de-estoque-com-transacoes/Controle-de-estoque-com-transacoes.csproj": {}
+    "C:\\Users\\Kak\\Documents\\Projetos\\Controle-de-estoque-com-transacoes\\Controle-de-estoque-com-transacoes.csproj": {}
   },
   "projects": {
-    "/home/kak/Documentos/Projetos/Controle-de-estoque-com-transacoes/Controle-de-estoque-com-transacoes.csproj": {
+    "C:\\Users\\Kak\\Documents\\Projetos\\Controle-de-estoque-com-transacoes\\Controle-de-estoque-com-transacoes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/kak/Documentos/Projetos/Controle-de-estoque-com-transacoes/Controle-de-estoque-com-transacoes.csproj",
+        "projectUniqueName": "C:\\Users\\Kak\\Documents\\Projetos\\Controle-de-estoque-com-transacoes\\Controle-de-estoque-com-transacoes.csproj",
         "projectName": "Controle-de-estoque-com-transacoes",
-        "projectPath": "/home/kak/Documentos/Projetos/Controle-de-estoque-com-transacoes/Controle-de-estoque-com-transacoes.csproj",
-        "packagesPath": "/home/kak/.nuget/packages/",
-        "outputPath": "/home/kak/Documentos/Projetos/Controle-de-estoque-com-transacoes/obj/",
+        "projectPath": "C:\\Users\\Kak\\Documents\\Projetos\\Controle-de-estoque-com-transacoes\\Controle-de-estoque-com-transacoes.csproj",
+        "packagesPath": "C:\\Users\\Kak\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Kak\\Documents\\Projetos\\Controle-de-estoque-com-transacoes\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/kak/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Kak\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "/usr/lib64/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -39,10 +39,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "11.0.100"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.Data.Sqlite": {
@@ -61,12 +62,30 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[10.0.8, 10.0.8]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[10.0.8, 10.0.8]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[10.0.8, 10.0.8]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[10.0.8, 10.0.8]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/10.0.108/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\11.0.100-preview.5.26302.115/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

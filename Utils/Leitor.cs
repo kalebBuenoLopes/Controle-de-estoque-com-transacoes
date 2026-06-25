@@ -61,5 +61,20 @@ namespace ControleEstoque.Utils
             
             return i;
         }
+
+        public static long LerLong()
+        {
+            string texto = Console.ReadLine();
+            long i;
+
+            while (!long.TryParse(texto, out i))
+            {
+                Escrever.Alerta("O conteúdo digitado deve ser um número inteiro");
+                Escrever.Normal("Tente novamente: ");
+                texto = Console.ReadLine();
+            }
+
+            return i;
+        }
     }
 }
