@@ -1,4 +1,5 @@
 ﻿using ControleEstoque.Repository;
+using ControleEstoque.Services;
 using ControleEstoque.Utils;
 
 namespace ControleEstoque
@@ -16,7 +17,12 @@ namespace ControleEstoque
 
                 switch (selecaoMenu)
                 {
-                    
+                    case 1:
+                        ProdutoServices.CadastrarProduto();
+                    break;
+                    case 2:
+                        ProdutoServices.ListarProdutos();
+                    break;   
                     case 9:
                         Console.Clear();
                     break;
