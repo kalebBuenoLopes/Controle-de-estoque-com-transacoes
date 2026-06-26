@@ -1,13 +1,14 @@
 using ControleEstoque.Models;
+using Microsoft.Data.Sqlite;
 
 namespace ControleEstoque.Repository
 {
     public class TabelaProdutos
     {
-        public static void CadastrarProduto(string nome, decimal preco, int quantidade)
+        public static void CadastrarProduto(string nome, decimal preco, int quantidade, SqliteConnection conexao, SqliteTransaction transacao)
         {
-            using var conexao = Banco.AbrirConexao();
-            var comando = conexao.CreateCommand();
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
 
             comando.Parameters.AddWithValue("@NOME", nome);
             comando.Parameters.AddWithValue("@PRECO", preco);
@@ -23,10 +24,10 @@ namespace ControleEstoque.Repository
             comando.ExecuteNonQuery();
         }
 
-        public static List<Produto> SelecionarProdutos()
+        public static List<Produto> SelecionarProdutos(SqliteConnection conexao, SqliteTransaction transacao)
         {
-            using var conexao = Banco.AbrirConexao();
-            var comando = conexao.CreateCommand();
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
 
             comando.CommandText = @"
             
@@ -39,7 +40,7 @@ namespace ControleEstoque.Repository
             
             ";
 
-            var leitor = comando.ExecuteReader();
+            using var leitor = comando.ExecuteReader();
             List<Produto> produtos = new List<Produto>();
             while (leitor.Read())
             {
@@ -56,10 +57,10 @@ namespace ControleEstoque.Repository
             return produtos;
         }
 
-        public static Produto? SelecionarProduto(long id)
+        public static Produto? SelecionarProduto(long id, SqliteConnection conexao, SqliteTransaction transacao)
         {
-            using var conexao = Banco.AbrirConexao();
-            var comando = conexao.CreateCommand();
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
             comando.Parameters.AddWithValue("@ID", id);
 
             comando.CommandText = @"
@@ -74,7 +75,7 @@ namespace ControleEstoque.Repository
             
             ";
 
-            var leitor = comando.ExecuteReader();
+            using var leitor = comando.ExecuteReader();
             Produto produto = new Produto();
             if (leitor.Read())
             {
@@ -89,19 +90,37 @@ namespace ControleEstoque.Repository
             return null;
         }
 
-        public static void EntradaEstoque(long id, int quantidade)
+        public static void EntradaEstoque(long id, int quantidade, SqliteConnection conexao, SqliteTransaction transacao)
         {
-            using var conexao = Banco.AbrirConexao();
-            var comando = conexao.CreateCommand();
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
             comando.Parameters.AddWithValue("@ID", id);
             comando.Parameters.AddWithValue("@QUANTIDADE", quantidade);
 
             comando.CommandText = @"
             
-                UPDATE TABLE PRODUTOS
+                UPDATE PRODUTOS
                 SET QUANTIDADE = QUANTIDADE + @QUANTIDADE
                 WHERE ID = @ID;
             
+            ";
+
+            comando.ExecuteNonQuery();
+        }
+
+        public static void SaidaEstoque(long id, int quantidade, SqliteConnection conexao, SqliteTransaction transacao)
+        {
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
+            comando.Parameters.AddWithValue("@ID", id);
+            comando.Parameters.AddWithValue("@QUANTIDADE", quantidade);
+
+            comando.CommandText = @"
+            
+                UPDATE PRODUTOS
+                SET QUANTIDADE = QUANTIDADE - @QUANTIDADE
+                WHERE ID = @ID;
+
             ";
 
             comando.ExecuteNonQuery();

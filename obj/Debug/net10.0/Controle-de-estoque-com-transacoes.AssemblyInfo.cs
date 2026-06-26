@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Controle-de-estoque-com-transacoes")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2daf4e08ce86adb26dcd5a91c4bc503da01f7c2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+317e72258548771ada6a311f118bb89739bbae8c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Controle-de-estoque-com-transacoes")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Controle-de-estoque-com-transacoes")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

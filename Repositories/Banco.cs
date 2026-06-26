@@ -65,6 +65,16 @@ namespace ControleEstoque.Repository
             
             ";
             comando.ExecuteNonQuery();
+
+            comando.CommandText = @"
+            
+                CREATE TABLE IF NOT EXISTS TESTES(
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    NOME TEXT NOT NULL
+                );
+            
+            ";
+            comando.ExecuteNonQuery();
         }
     }
 }

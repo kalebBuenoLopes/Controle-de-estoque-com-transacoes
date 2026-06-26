@@ -1,4 +1,5 @@
-﻿using ControleEstoque.Repository;
+﻿using ControleEstoque.Enums;
+using ControleEstoque.Repository;
 using ControleEstoque.Services;
 using ControleEstoque.Utils;
 
@@ -26,6 +27,9 @@ namespace ControleEstoque
                     case 3:
                         MovimentacaoServices.EntradaEstoque();
                     break;  
+                    case 4:
+                        MovimentacaoServices.SaidaEstoque();
+                    break;
                     case 9:
                         Console.Clear();
                     break;
