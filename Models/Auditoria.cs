@@ -1,6 +1,6 @@
 namespace ControleEstoque.Models
 {
-    public class ModeloAuditoria
+    public class Auditoria
     {
         public long Id{get;set;}
         public string Operacao{get;set;}

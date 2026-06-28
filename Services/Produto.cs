@@ -76,5 +76,53 @@ namespace ControleEstoque.Services
             }
         }
 
+        public static void ProdutoMaiorQuantidade()
+        {
+            using var conexao = Banco.AbrirConexao();
+            using var transacao = conexao.BeginTransaction();
+
+            try
+            {
+                Escrever.Titulo("Produto com maior quantidade");
+                Produto produto = TabelaProdutos.ProdutoMaiorEstoque(conexao, transacao);
+                if(produto == null)
+                {
+                    Escrever.Alerta("Não há produtos cadastrados na base");
+                }
+                else
+                {
+                    Escrever.Normal($"{produto.Id} - {produto.Nome} Quantidade: {produto.Quantidade}");
+                }
+                transacao.Commit();
+            }catch (Exception ex)
+            {
+                transacao.Rollback();
+                Escrever.Alerta(ex.Message);
+            }
+        }
+
+        public static void ValorTotalEstoque()
+        {
+            using var conexao = Banco.AbrirConexao();
+            using var transacao = conexao.BeginTransaction();
+
+            try
+            {
+                decimal valor = TabelaProdutos.ValorTotalEstoque(conexao, transacao);
+                if (valor == 0)
+                {
+                    Escrever.Alerta("Não há produtos em estoque");
+                }
+                else
+                {
+                    Escrever.Normal($"Valor total em estoque: {valor}");
+                }
+                transacao.Commit();
+            }catch(Exception ex)
+            {
+                transacao.Rollback();
+            }
+        }
+
     }
 }

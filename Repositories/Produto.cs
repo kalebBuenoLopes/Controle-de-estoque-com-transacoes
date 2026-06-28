@@ -125,5 +125,73 @@ namespace ControleEstoque.Repository
 
             comando.ExecuteNonQuery();
         }
+
+        public static void AlterarEstoque(SqliteConnection conexao, SqliteTransaction transacao, long id, int quantidade)
+        {
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
+            comando.Parameters.AddWithValue("@ID", id);
+            comando.Parameters.AddWithValue("@QUANTIDADE", quantidade);
+
+            comando.CommandText = @"
+            
+                UPDATE PRODUTOS
+                SET QUANTIDADE = @QUANTIDADE
+                WHERE ID = @ID;
+
+            ";
+
+            comando.ExecuteNonQuery();
+        }
+
+        public static Produto? ProdutoMaiorEstoque(SqliteConnection conexao, SqliteTransaction transacao)
+        {
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
+
+            comando.CommandText = @"
+            
+                SELECT 
+                    ID,
+                    NOME,
+                    QUANTIDADE
+                FROM PRODUTOS
+                ORDER BY QUANTIDADE DESC
+
+            ";
+
+            using var ler = comando.ExecuteReader();
+
+            Produto produto = new Produto();
+
+            if (ler.Read())
+            {
+                produto.Id = ler.GetInt64(0);
+                produto.Nome = ler.GetString(1);
+                produto.Quantidade = ler.GetInt32(2);
+
+                return produto;
+            }
+
+            return null;
+        }
+
+        public static decimal ValorTotalEstoque(SqliteConnection conexao, SqliteTransaction transacao)
+        {
+            using var comando = conexao.CreateCommand();
+            comando.Transaction = transacao;
+
+            comando.CommandText = @"
+            
+                SELECT 
+                    SUM(QUANTIDADE * PRECO) AS TOTAL
+                FROM PRODUTOS
+            
+            ";
+
+            decimal total = (decimal)comando.ExecuteScalar();
+
+            return total;
+        }
     }
 }

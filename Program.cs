@@ -30,6 +30,18 @@ namespace ControleEstoque
                     case 4:
                         MovimentacaoServices.SaidaEstoque();
                     break;
+                    case 5:
+                        MovimentacaoServices.AjusteManual();
+                    break;
+                    case 6:
+                        GeralServices.HistoricoMovimentacoes();
+                    break;
+                    case 7:
+                        GeralServices.HistoricoProduto();
+                    break;
+                    case 8:
+                        AuditoriaServices.ListarAuditorias();
+                    break;
                     case 9:
                         Console.Clear();
                     break;

@@ -26,7 +26,7 @@ namespace ControleEstoque.Services
                     long idProduto = 0;
                     while(produto == null)
                     {
-                        ProdutoServices.ListarProdutos();
+                        ProdutoUI.ListarProdutos(produtos);
                         Escrever.Normal("Digite o código do produto que deseja cadastrar a entrada de estoque: ");
                         idProduto = Ler.LerLong();
 
@@ -58,7 +58,7 @@ namespace ControleEstoque.Services
                     }
                     else
                     {
-                    observacao = null; 
+                    observacao = ""; 
                     }
 
                     TabelaProdutos.EntradaEstoque(idProduto, quantidade,conexao,transacao);
@@ -130,7 +130,7 @@ namespace ControleEstoque.Services
                     Escrever.Normal("Deseja registrar observação?\n1 - Sim\n2 - Não\n");
                     int opcaoObservacao = Ler.LerInteiroLimitador(2,1);
 
-                    string? observao = null;
+                    string observao = "";
                     if (opcaoObservacao == 1)
                     {
                         Escrever.Normal("Digite a observação: ");
@@ -140,7 +140,6 @@ namespace ControleEstoque.Services
                     TabelaProdutos.SaidaEstoque(idProduto,quantidade,conexao,transacao);
                     TabelaMovimentacoes.CadastrarMovimentacao(idProduto, TipoMovimentacao.Saida ,quantidade,DateTime.Now,observao,conexao,transacao);
                     TabelaAuditorias.CadastrarAuditoria("Saída estoque", $"O estoque do produto: {produto.Id} - {produto.Nome}, saiu em {quantidade}", DateTime.Now, conexao,transacao);
-                    transacao.Commit();
                 }
 
                 transacao.Commit();
@@ -150,6 +149,136 @@ namespace ControleEstoque.Services
                 Escrever.Alerta(ex.Message);
             }
 
+        }
+
+        public static void AjusteManual()
+        {
+            using var conexao = Banco.AbrirConexao();
+            using var transacao = conexao.BeginTransaction();
+            try
+            {
+                List<Produto> produtos = TabelaProdutos.SelecionarProdutos(conexao,transacao);
+                Escrever.Titulo("Ajuste manual");
+                if(produtos.Count == 0)
+                {
+                    Escrever.Alerta("Não há produtos cadastrados na base");
+                }
+                else
+                {
+                    Produto produto = null;
+                    long idProduto = 0;
+                    while(produto == null){
+                        ProdutoUI.ListarProdutos(produtos);
+                        Escrever.Normal("Digite o código do produto a ser ajustado: ");
+                        int id = Ler.LerInteiro();
+                        idProduto = id;
+                        
+                        produto = TabelaProdutos.SelecionarProduto(idProduto, conexao, transacao);
+                        if (produto == null)
+                        {
+                            Escrever.Alerta("Código não cadastrado na base, tente novamente");
+                        }
+                    }
+
+                    Escrever.Normal("Digite a quantidade de estoque: ");
+                    int quantidade = Ler.LerInteiro();
+
+                    while(quantidade < 1)
+                    {
+                        Escrever.Alerta("A quantidade não pode ser menor que 1");
+                        Escrever.Normal("Digite novamente: ");
+                        quantidade = Ler.LerInteiro();
+                    }
+
+                    Escrever.Normal("Digite a motivação da alteração: ");
+                    string observacao = Ler.LerTexto();
+
+                    TabelaProdutos.AlterarEstoque(conexao, transacao, idProduto, quantidade);
+                    TabelaMovimentacoes.CadastrarMovimentacao(idProduto, TipoMovimentacao.Ajuste, quantidade, DateTime.Now, observacao, conexao, transacao);
+                    TabelaAuditorias.CadastrarAuditoria("Ajuste",$"Ajustado produto: {produto.Id} - {produto.Nome} para quantidade {produto.Quantidade} com a justificativa: {observacao}", DateTime.Now,conexao,transacao);
+
+                    
+                }
+                transacao.Commit();
+            }
+            catch (Exception ex)
+            {
+                transacao.Rollback();
+                Escrever.Normal(ex.Message);
+            }
+        }
+
+        public static void MaiorQuantidadeMovimentacao()
+        {
+            using var conexao = Banco.AbrirConexao();
+            using var transacao = conexao.BeginTransaction();
+            try
+            {
+                Escrever.Titulo("Maior quantidade de movimentações");
+                Movimentacao movimentacao = TabelaMovimentacoes.ProdutoComMaisMovimentacao(conexao, transacao);
+                if(movimentacao == null)
+                {
+                    Escrever.Alerta("Não há movimentações cadastradas");
+                }
+                else
+                {
+                    Escrever.Normal($"{movimentacao.NomeProduto} com a quantidade: {movimentacao.Quantidade}");
+                }
+                transacao.Commit();
+            }
+            catch (Exception ex)
+            {
+                Escrever.Alerta(ex.Message);
+                transacao.Rollback();
+            }
+        }
+
+        public static void QuantidadeTotalEntradas()
+        {
+            using var conexao = Banco.AbrirConexao();
+            using var transacao = conexao.BeginTransaction();
+            try
+            {
+                long quantidade = TabelaMovimentacoes.QuantidadeEntrada(conexao, transacao);
+                if(quantidade == 0)
+                {
+                    Escrever.Alerta("Não há entradas cadastradas");
+                }
+                else
+                {
+                    Escrever.Normal($"Quantidade de entradas: {quantidade}");
+                }
+                transacao.Commit();
+            }
+            catch (Exception ex)
+            {
+                transacao.Rollback();
+                Escrever.Alerta(ex.Message);
+            }
+        }
+
+        public static void QuantidadeTotalSaida()
+        {
+            using var conexao = Banco.AbrirConexao();
+            using var transacao = conexao.BeginTransaction();
+            try
+            {
+                long quantidade = TabelaMovimentacoes.QuantidadeEntrada(conexao, transacao);
+                if(quantidade == 0)
+                {
+                    Escrever.Alerta("Não há saidas cadastradas");
+                }
+                else
+                {
+                    Escrever.Normal($"Quantidade de saidas: {quantidade}");
+                }
+                transacao.Commit();
+            }
+            catch (Exception ex)
+            {
+                transacao.Rollback();
+                Escrever.Alerta(ex.Message);
+            }
         }
     }
 }
